@@ -1,15 +1,6 @@
 version: '2'
 
 services:
-    db:
-        image: mysql
-        volumes:
-            - "./var/db:/var/lib/mysql"
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     php:
         build:
             context: docker/php7-fpm
@@ -26,6 +17,15 @@ services:
             - php
         volumes:
             - ./var/logs/nginx/:/var/log/nginx
+    mysql:
+        image: mysql
+        volumes:
+            - "./var/db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     elk:
         image: willdurand/elk
         ports:
