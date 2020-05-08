@@ -2,12 +2,20 @@
 FROM php:7.4-fpm
 ARG TIMEZONE
 
+# nodejs + yarn
+RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
+&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
 # RUN apt-get install timedatectl && timedatectl set-local-rtc 1
 RUN apt-get update && apt-get install -y \
     openssl \
     git \
     unzip \
-    wget
+    wget \
+    nodejs \
+    yarn \
+    bash-completion
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -35,5 +43,10 @@ RUN pecl install xdebug \
 && echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 && echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+# autocompleter
+RUN composer global require bamarni/symfony-console-autocomplete \
+&& echo 'export PATH="$PATH:~/.composer/vendor/bin/"' >> ~/.bashrc \
+&& echo 'eval "$(symfony-autocomplete)"' >> ~/.bashrc
 
 WORKDIR /var/www

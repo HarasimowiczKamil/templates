@@ -1,4 +1,4 @@
-version: '2'
+version: '2.2'
 
 services:
     php:
@@ -26,6 +26,8 @@ services:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - 3306:3306
     elk:
         image: willdurand/elk
         ports:
